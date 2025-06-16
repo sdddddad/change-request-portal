@@ -28,6 +28,20 @@ const Login = () => {
 
     setIsLoading(true);
     
+    // TODO: Add Google Sheets validation here
+    // Replace this section with Google Apps Script API call to validate employee ID
+    // const response = await fetch('YOUR_GOOGLE_APPS_SCRIPT_URL', {
+    //   method: 'POST',
+    //   headers: { 'Content-Type': 'application/json' },
+    //   body: JSON.stringify({ action: 'validateEmployee', employeeId: employeeId })
+    // });
+    // const result = await response.json();
+    // if (!result.isValid) {
+    //   toast({ title: "Error", description: "Invalid Employee ID", variant: "destructive" });
+    //   setIsLoading(false);
+    //   return;
+    // }
+    
     // Simulate OTP sending (integrate with Google Apps Script)
     setTimeout(() => {
       setIsLoading(false);
@@ -52,14 +66,30 @@ const Login = () => {
 
     setIsLoading(true);
     
+    // TODO: Add Google Sheets OTP verification here
+    // Replace this section with Google Apps Script API call to verify OTP and get employee details
+    // const response = await fetch('YOUR_GOOGLE_APPS_SCRIPT_URL', {
+    //   method: 'POST',
+    //   headers: { 'Content-Type': 'application/json' },
+    //   body: JSON.stringify({ action: 'verifyOTP', employeeId: employeeId, otp: otp })
+    // });
+    // const result = await response.json();
+    // if (!result.isValid) {
+    //   toast({ title: "Error", description: "Invalid OTP", variant: "destructive" });
+    //   setIsLoading(false);
+    //   return;
+    // }
+    // Store the actual employee data from Google Sheets:
+    // localStorage.setItem('employee', JSON.stringify(result.employeeData));
+    
     // Simulate OTP verification (integrate with Google Apps Script)
     setTimeout(() => {
       setIsLoading(false);
       localStorage.setItem('employee', JSON.stringify({
         id: employeeId,
-        name: 'John Doe',
-        role: 'Manager',
-        email: 'john.doe@company.com'
+        name: 'John Doe', // This should come from Google Sheets
+        role: 'Manager', // This should come from Google Sheets
+        email: 'john.doe@company.com' // This should come from Google Sheets
       }));
       navigate('/home');
     }, 1500);
@@ -75,7 +105,8 @@ const Login = () => {
             </div>
           </div>
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">Employee Portal</h1>
+            <h1 className="text-3xl font-bold text-blue-600">PDMS</h1>
+            <p className="text-sm text-gray-600 mt-1">Project Document Management System</p>
             <p className="text-gray-600 mt-2">Access your workspace securely</p>
           </div>
         </div>

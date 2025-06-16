@@ -80,9 +80,43 @@ const ChangeRequestForm: React.FC<ChangeRequestFormProps> = ({ type, title }) =>
     setIsSubmitting(true);
     setShowAnimation(true);
     
+    const newTicketId = generateTicketId();
+    
+    // TODO: Add Google Sheets form submission here
+    // Replace this section with Google Apps Script API call to submit form data
+    // const employee = JSON.parse(localStorage.getItem('employee') || '{}');
+    // const submissionData = {
+    //   ticketId: newTicketId,
+    //   submittedBy: employee.name,
+    //   employeeId: employee.id,
+    //   submittedOn: new Date().toISOString(),
+    //   type: type,
+    //   ...formData
+    // };
+    // 
+    // try {
+    //   const response = await fetch('YOUR_GOOGLE_APPS_SCRIPT_URL', {
+    //     method: 'POST',
+    //     headers: { 'Content-Type': 'application/json' },
+    //     body: JSON.stringify({ action: 'submitForm', data: submissionData })
+    //   });
+    //   const result = await response.json();
+    //   if (!result.success) {
+    //     throw new Error('Submission failed');
+    //   }
+    // } catch (error) {
+    //   toast({
+    //     title: "Submission Failed",
+    //     description: "Please try again later",
+    //     variant: "destructive"
+    //   });
+    //   setIsSubmitting(false);
+    //   setShowAnimation(false);
+    //   return;
+    // }
+    
     // Simulate form submission
     setTimeout(() => {
-      const newTicketId = generateTicketId();
       setTicketId(newTicketId);
       setIsSubmitting(false);
       
