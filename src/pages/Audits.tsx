@@ -4,6 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { FileBarChart, AlertCircle } from 'lucide-react';
 import Header from '@/components/Header';
+import Footer from '@/components/Footer';
 
 const Audits = () => {
   const handleAuditReportClick = () => {
@@ -15,10 +16,10 @@ const Audits = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 flex flex-col">
       <Header />
       
-      <main className="container mx-auto px-4 py-8">
+      <main className="container mx-auto px-4 py-8 flex-grow">
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900 mb-2">Audits & Non-Conformances</h1>
           <p className="text-gray-600">Access audit reports and non-conformance records</p>
@@ -82,6 +83,8 @@ const Audits = () => {
           </Card>
         </div>
       </main>
+
+      <Footer />
     </div>
   );
 };

@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { FileText, GraduationCap, Settings, ClipboardList } from 'lucide-react';
 import Header from '@/components/Header';
+import Footer from '@/components/Footer';
 
 const Home = () => {
   const navigate = useNavigate();
@@ -40,12 +41,12 @@ const Home = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 flex flex-col">
       <Header />
       
-      <main className="container mx-auto px-4 py-8">
+      <main className="container mx-auto px-4 py-8 flex-grow">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Welcome to Employee Portal</h1>
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">Welcome to PDMS</h1>
           <p className="text-gray-600">Choose an option below to get started</p>
         </div>
 
@@ -78,6 +79,8 @@ const Home = () => {
           ))}
         </div>
       </main>
+
+      <Footer />
     </div>
   );
 };

@@ -39,26 +39,34 @@ const Header = () => {
     <header className="bg-white shadow-sm border-b">
       <div className="container mx-auto px-4 py-3">
         <div className="flex items-center justify-between">
-          {/* Left side - Navigation */}
-          <div className="flex items-center space-x-4">
-            <Button 
-              variant="ghost" 
-              size="sm"
-              onClick={handleBack}
-              className="hover:bg-gray-100"
-            >
-              <ArrowLeft className="h-4 w-4 mr-2" />
-              Back
-            </Button>
-            <Button 
-              variant="ghost" 
-              size="sm"
-              onClick={handleHome}
-              className="hover:bg-gray-100"
-            >
-              <Home className="h-4 w-4 mr-2" />
-              Home
-            </Button>
+          {/* Left side - Navigation and Branding */}
+          <div className="flex items-center space-x-6">
+            <div className="flex items-center space-x-4">
+              <Button 
+                variant="ghost" 
+                size="sm"
+                onClick={handleBack}
+                className="hover:bg-gray-100"
+              >
+                <ArrowLeft className="h-4 w-4 mr-2" />
+                Back
+              </Button>
+              <Button 
+                variant="ghost" 
+                size="sm"
+                onClick={handleHome}
+                className="hover:bg-gray-100"
+              >
+                <Home className="h-4 w-4 mr-2" />
+                Home
+              </Button>
+            </div>
+            
+            {/* PDMS Branding */}
+            <div className="flex flex-col">
+              <h1 className="text-xl font-bold text-blue-600">PDMS</h1>
+              <p className="text-xs text-gray-600 leading-tight">Project Document Management System</p>
+            </div>
           </div>
 
           {/* Right side - User info */}
