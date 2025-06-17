@@ -80,7 +80,10 @@ const Login = () => {
     //   return;
     // }
     // Store the actual employee data from Google Sheets:
-    // localStorage.setItem('employee', JSON.stringify(result.employeeData));
+    // localStorage.setItem('employee', JSON.stringify({
+    //   ...result.employeeData,
+    //   loginTime: Date.now()
+    // }));
     
     // Simulate OTP verification (integrate with Google Apps Script)
     setTimeout(() => {
@@ -89,7 +92,8 @@ const Login = () => {
         id: employeeId,
         name: 'John Doe', // This should come from Google Sheets
         role: 'Manager', // This should come from Google Sheets
-        email: 'john.doe@company.com' // This should come from Google Sheets
+        email: 'john.doe@company.com', // This should come from Google Sheets
+        loginTime: Date.now() // Add login timestamp
       }));
       navigate('/home');
     }, 1500);
