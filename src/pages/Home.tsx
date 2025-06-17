@@ -2,12 +2,16 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { FileText, GraduationCap, Settings, ClipboardList } from 'lucide-react';
+import { FileText, GraduationCap, Settings, ClipboardList, Search, Car } from 'lucide-react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 
 const Home = () => {
   const navigate = useNavigate();
+
+  const handleTrackRequestClick = () => {
+    window.open('https://docs.google.com/spreadsheets/d/1RAWCY4qPxScflYlHRYdTcCNp1CyXKDrOgAzf9qf0hJ0/edit?usp=sharing', '_blank');
+  };
 
   const menuItems = [
     {
@@ -37,6 +41,14 @@ const Home = () => {
       icon: ClipboardList,
       path: '/audits',
       color: 'from-orange-500 to-orange-600'
+    },
+    {
+      title: 'Track Your Request',
+      description: 'View request ID, date, and approval status',
+      icon: Search,
+      path: null,
+      color: 'from-red-500 to-red-600',
+      onClick: handleTrackRequestClick
     }
   ];
 
@@ -45,17 +57,20 @@ const Home = () => {
       <Header />
       
       <main className="container mx-auto px-4 py-8 flex-grow">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Welcome to PDMS</h1>
-          <p className="text-gray-600">Choose an option below to get started</p>
+        <div className="mb-8 flex items-center space-x-3">
+          <Car className="h-8 w-8 text-blue-600" />
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">Welcome to PDMS</h1>
+            <p className="text-gray-600">Choose an option below to get started</p>
+          </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl">
           {menuItems.map((item) => (
             <Card 
               key={item.title}
               className="cursor-pointer transition-all duration-300 hover:shadow-lg hover:scale-105 border-0 bg-white/80 backdrop-blur-sm overflow-hidden group"
-              onClick={() => navigate(item.path)}
+              onClick={() => item.onClick ? item.onClick() : navigate(item.path)}
             >
               <div className={`h-2 bg-gradient-to-r ${item.color}`} />
               <CardHeader className="pb-4">

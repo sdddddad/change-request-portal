@@ -2,64 +2,29 @@
 import React from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { ExternalLink, BookOpen, Video, FileText, Award } from 'lucide-react';
+import { ExternalLink, BookOpen, Car } from 'lucide-react';
 import Header from '@/components/Header';
+import Footer from '@/components/Footer';
 
 const Learning = () => {
   const learningMaterials = [
     {
       id: 1,
-      title: 'Employee Onboarding Guide',
-      description: 'Complete guide for new employees',
-      type: 'PDF',
-      icon: FileText,
-      color: 'text-red-600',
-      url: '#'
+      title: 'Lean Basic (PPT)',
+      description: 'Complete guide for problem solving by Ganesh Jatadharan',
+      type: 'PPT',
+      icon: BookOpen,
+      color: 'text-blue-600',
+      url: 'https://docs.google.com/presentation/d/1YhxM8qSL3BKpXbKeumszsRHzWJgymbR0Z49dn9_DQzk/edit?usp=sharing'
     },
     {
       id: 2,
-      title: 'Safety Training Module',
-      description: 'Essential safety procedures and protocols',
-      type: 'Video',
-      icon: Video,
-      color: 'text-blue-600',
-      url: '#'
-    },
-    {
-      id: 3,
-      title: 'Quality Management System',
-      description: 'Understanding QMS principles',
-      type: 'Course',
+      title: 'ASPICE - Development Cycle (PPT)',
+      description: 'Development lifecycle presentation by Shaik Mohammed Altaf',
+      type: 'PPT',
       icon: BookOpen,
       color: 'text-green-600',
-      url: '#'
-    },
-    {
-      id: 4,
-      title: 'Leadership Development',
-      description: 'Building effective leadership skills',
-      type: 'Training',
-      icon: Award,
-      color: 'text-purple-600',
-      url: '#'
-    },
-    {
-      id: 5,
-      title: 'Process Excellence Training',
-      description: 'Continuous improvement methodologies',
-      type: 'Course',
-      icon: BookOpen,
-      color: 'text-orange-600',
-      url: '#'
-    },
-    {
-      id: 6,
-      title: 'Communication Skills',
-      description: 'Effective workplace communication',
-      type: 'Video',
-      icon: Video,
-      color: 'text-cyan-600',
-      url: '#'
+      url: 'https://docs.google.com/presentation/d/1-we4FW1ufJhIOK9F9lpBm4FkVpjYm4OwJioDQn07ldk/edit?usp=sharing'
     }
   ];
 
@@ -68,17 +33,24 @@ const Learning = () => {
     console.log(`Opening ${title} in new tab`);
   };
 
+  const handleContactAdmin = () => {
+    window.open('mailto:processexcellence@everestfleet.com', '_blank');
+  };
+
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 flex flex-col">
       <Header />
       
-      <main className="container mx-auto px-4 py-8">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Learning Resources</h1>
-          <p className="text-gray-600">Access training materials and learning resources to enhance your skills</p>
+      <main className="container mx-auto px-4 py-8 flex-grow">
+        <div className="mb-8 flex items-center space-x-3">
+          <Car className="h-8 w-8 text-green-600" />
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">Learning Resources</h1>
+            <p className="text-gray-600">Access training materials and learning resources to enhance your skills</p>
+          </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl">
           {learningMaterials.map((material) => (
             <Card 
               key={material.id}
@@ -123,13 +95,18 @@ const Learning = () => {
         <div className="mt-12 p-6 bg-blue-50 rounded-lg border border-blue-200">
           <h3 className="text-lg font-semibold text-blue-900 mb-2">Need More Resources?</h3>
           <p className="text-blue-800 mb-4">
-            Can't find what you're looking for? Contact the HR team or your supervisor for additional learning materials and training opportunities.
+            Learning is a never-ending story. We will add more modules in the future. Can't find what you're looking for? Contact the admin for additional learning materials and training opportunities.
           </p>
-          <Button className="bg-blue-600 hover:bg-blue-700 text-white">
-            Contact HR
+          <Button 
+            onClick={handleContactAdmin}
+            className="bg-blue-600 hover:bg-blue-700 text-white"
+          >
+            Contact Admin
           </Button>
         </div>
       </main>
+
+      <Footer />
     </div>
   );
 };
