@@ -1,12 +1,15 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { ExternalLink, BookOpen, Car } from 'lucide-react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 
 const Learning = () => {
+  const [showContactDialog, setShowContactDialog] = useState(false);
+
   const learningMaterials = [
     {
       id: 1,
@@ -34,7 +37,11 @@ const Learning = () => {
   };
 
   const handleContactAdmin = () => {
-    window.open('mailto:processexcellence@everestfleet.com', '_blank');
+    setShowContactDialog(true);
+  };
+
+  const handleCloseDialog = () => {
+    setShowContactDialog(false);
   };
 
   return (
@@ -105,6 +112,23 @@ const Learning = () => {
           </Button>
         </div>
       </main>
+
+      {/* Contact Admin Dialog */}
+      <Dialog open={showContactDialog} onOpenChange={setShowContactDialog}>
+        <DialogContent className="bg-white">
+          <DialogHeader>
+            <DialogTitle>Contact Admin</DialogTitle>
+            <DialogDescription>
+              Please send mail to processexcellence@everestfleet.com
+            </DialogDescription>
+          </DialogHeader>
+          <div className="flex justify-end space-x-2 mt-4">
+            <Button onClick={handleCloseDialog} className="bg-blue-600 hover:bg-blue-700">
+              Thank You
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
 
       <Footer />
     </div>
