@@ -28,29 +28,50 @@ const Login = () => {
 
     setIsLoading(true);
     
-    // TODO: Add Google Sheets validation here
-    // Replace this section with Google Apps Script API call to validate employee ID
-    // const response = await fetch('YOUR_GOOGLE_APPS_SCRIPT_URL', {
-    //   method: 'POST',
-    //   headers: { 'Content-Type': 'application/json' },
-    //   body: JSON.stringify({ action: 'validateEmployee', employeeId: employeeId })
-    // });
-    // const result = await response.json();
-    // if (!result.isValid) {
-    //   toast({ title: "Error", description: "Invalid Employee ID", variant: "destructive" });
-    //   setIsLoading(false);
-    //   return;
-    // }
-    
-    // Simulate OTP sending (integrate with Google Apps Script)
-    setTimeout(() => {
-      setIsLoading(false);
+    try {
+      console.log('Validating employee ID:', employeeId);
+      const response = await fetch('https://script.google.com/macros/s/AKfycbyu4rPT1bVKlb-w-KgpJpyazamYK66qWalUp8yklZddwNgWMkdySBqGVgdxuYTnj3Ce/exec', {
+        method: 'POST',
+        headers: { 
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ 
+          action: 'validateEmployee', 
+          employeeId: employeeId.trim() 
+        })
+      });
+
+      console.log('Response status:', response.status);
+      const result = await response.json();
+      console.log('Validation result:', result);
+      
+      if (!result.success || !result.isValid) {
+        toast({
+          title: "Error",
+          description: result.message || "Invalid Employee ID. Please check and try again.",
+          variant: "destructive"
+        });
+        setIsLoading(false);
+        return;
+      }
+
+      // If validation successful, proceed to OTP step
       setStep(2);
       toast({
         title: "OTP Sent",
         description: "Please check your email for the verification code"
       });
-    }, 1500);
+      
+    } catch (error) {
+      console.error('Error validating employee:', error);
+      toast({
+        title: "Error",
+        description: "Failed to validate Employee ID. Please check your internet connection and try again.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleLogin = async (e: React.FormEvent) => {
@@ -66,37 +87,63 @@ const Login = () => {
 
     setIsLoading(true);
     
-    // TODO: Add Google Sheets OTP verification here
-    // Replace this section with Google Apps Script API call to verify OTP and get employee details
-    // const response = await fetch('YOUR_GOOGLE_APPS_SCRIPT_URL', {
-    //   method: 'POST',
-    //   headers: { 'Content-Type': 'application/json' },
-    //   body: JSON.stringify({ action: 'verifyOTP', employeeId: employeeId, otp: otp })
-    // });
-    // const result = await response.json();
-    // if (!result.isValid) {
-    //   toast({ title: "Error", description: "Invalid OTP", variant: "destructive" });
-    //   setIsLoading(false);
-    //   return;
-    // }
-    // Store the actual employee data from Google Sheets:
-    // localStorage.setItem('employee', JSON.stringify({
-    //   ...result.employeeData,
-    //   loginTime: Date.now()
-    // }));
-    
-    // Simulate OTP verification (integrate with Google Apps Script)
-    setTimeout(() => {
-      setIsLoading(false);
-      localStorage.setItem('employee', JSON.stringify({
-        id: employeeId,
-        name: 'John Doe', // This should come from Google Sheets
-        role: 'Manager', // This should come from Google Sheets
-        email: 'john.doe@company.com', // This should come from Google Sheets
-        loginTime: Date.now() // Add login timestamp
-      }));
+    try {
+      console.log('Verifying OTP for employee:', employeeId, 'OTP:', otp);
+      const response = await fetch('https://script.google.com/macros/s/AKfycbyu4rPT1bVKlb-w-KgpJpyazamYK66qWalUp8yklZddwNgWMkdySBqGVgdxuYTnj3Ce/exec', {
+        method: 'POST',
+        headers: { 
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ 
+          action: 'verifyOTP', 
+          employeeId: employeeId.trim(),
+          otp: otp.trim()
+        })
+      });
+
+      console.log('OTP verification response status:', response.status);
+      const result = await response.json();
+      console.log('OTP verification result:', result);
+      
+      if (!result.success || !result.isValid) {
+        toast({
+          title: "Error",
+          description: result.message || "Invalid OTP. Please check and try again.",
+          variant: "destructive"
+        });
+        setIsLoading(false);
+        return;
+      }
+
+      // Store employee data from Google Sheets response
+      const employeeData = {
+        id: result.employeeData?.id || employeeId,
+        name: result.employeeData?.name || 'Employee',
+        role: result.employeeData?.role || 'User',
+        email: result.employeeData?.email || '',
+        loginTime: Date.now()
+      };
+
+      console.log('Storing employee data:', employeeData);
+      localStorage.setItem('employee', JSON.stringify(employeeData));
+      
+      toast({
+        title: "Success",
+        description: "Login successful! Redirecting to home page..."
+      });
+      
       navigate('/home');
-    }, 1500);
+      
+    } catch (error) {
+      console.error('Error verifying OTP:', error);
+      toast({
+        title: "Error",
+        description: "Failed to verify OTP. Please check your internet connection and try again.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -149,7 +196,7 @@ const Login = () => {
                   {isLoading ? (
                     <div className="flex items-center space-x-2">
                       <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-                      <span>Sending OTP...</span>
+                      <span>Validating...</span>
                     </div>
                   ) : (
                     <div className="flex items-center space-x-2">
