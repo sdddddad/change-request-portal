@@ -30,20 +30,45 @@ const Login = () => {
     
     try {
       console.log('Validating employee ID:', employeeId);
+      console.log('Making request to Google Apps Script...');
+      
+      const requestBody = { 
+        action: 'validateEmployee', 
+        employeeId: employeeId.trim() 
+      };
+      
+      console.log('Request body:', JSON.stringify(requestBody));
+      
       const response = await fetch('https://script.google.com/macros/s/AKfycbyu4rPT1bVKlb-w-KgpJpyazamYK66qWalUp8yklZddwNgWMkdySBqGVgdxuYTnj3Ce/exec', {
         method: 'POST',
+        mode: 'cors',
         headers: { 
           'Content-Type': 'application/json',
+          'Accept': 'application/json'
         },
-        body: JSON.stringify({ 
-          action: 'validateEmployee', 
-          employeeId: employeeId.trim() 
-        })
+        body: JSON.stringify(requestBody)
       });
 
+      console.log('Response received:', response);
       console.log('Response status:', response.status);
-      const result = await response.json();
-      console.log('Validation result:', result);
+      console.log('Response headers:', response.headers);
+      
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      
+      const responseText = await response.text();
+      console.log('Raw response text:', responseText);
+      
+      let result;
+      try {
+        result = JSON.parse(responseText);
+      } catch (parseError) {
+        console.error('Failed to parse JSON response:', parseError);
+        throw new Error('Invalid response format from server');
+      }
+      
+      console.log('Parsed validation result:', result);
       
       if (!result.success || !result.isValid) {
         toast({
@@ -64,9 +89,25 @@ const Login = () => {
       
     } catch (error) {
       console.error('Error validating employee:', error);
+      console.error('Error details:', {
+        name: error.name,
+        message: error.message,
+        stack: error.stack
+      });
+      
+      let errorMessage = "Failed to validate Employee ID. ";
+      
+      if (error.message === 'Failed to fetch') {
+        errorMessage += "This might be a network issue or the Google Apps Script needs to be configured to allow cross-origin requests. Please check your internet connection and try again.";
+      } else if (error.message.includes('CORS')) {
+        errorMessage += "Cross-origin request blocked. The Google Apps Script may need CORS configuration.";
+      } else {
+        errorMessage += error.message || "Please try again.";
+      }
+      
       toast({
-        title: "Error",
-        description: "Failed to validate Employee ID. Please check your internet connection and try again.",
+        title: "Connection Error",
+        description: errorMessage,
         variant: "destructive"
       });
     } finally {
@@ -89,20 +130,42 @@ const Login = () => {
     
     try {
       console.log('Verifying OTP for employee:', employeeId, 'OTP:', otp);
+      
+      const requestBody = { 
+        action: 'verifyOTP', 
+        employeeId: employeeId.trim(),
+        otp: otp.trim()
+      };
+      
+      console.log('OTP verification request body:', JSON.stringify(requestBody));
+      
       const response = await fetch('https://script.google.com/macros/s/AKfycbyu4rPT1bVKlb-w-KgpJpyazamYK66qWalUp8yklZddwNgWMkdySBqGVgdxuYTnj3Ce/exec', {
         method: 'POST',
+        mode: 'cors',
         headers: { 
           'Content-Type': 'application/json',
+          'Accept': 'application/json'
         },
-        body: JSON.stringify({ 
-          action: 'verifyOTP', 
-          employeeId: employeeId.trim(),
-          otp: otp.trim()
-        })
+        body: JSON.stringify(requestBody)
       });
 
       console.log('OTP verification response status:', response.status);
-      const result = await response.json();
+      
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      
+      const responseText = await response.text();
+      console.log('OTP verification raw response:', responseText);
+      
+      let result;
+      try {
+        result = JSON.parse(responseText);
+      } catch (parseError) {
+        console.error('Failed to parse OTP verification JSON response:', parseError);
+        throw new Error('Invalid response format from server');
+      }
+      
       console.log('OTP verification result:', result);
       
       if (!result.success || !result.isValid) {
@@ -136,9 +199,25 @@ const Login = () => {
       
     } catch (error) {
       console.error('Error verifying OTP:', error);
+      console.error('OTP verification error details:', {
+        name: error.name,
+        message: error.message,
+        stack: error.stack
+      });
+      
+      let errorMessage = "Failed to verify OTP. ";
+      
+      if (error.message === 'Failed to fetch') {
+        errorMessage += "This might be a network issue or the Google Apps Script needs to be configured to allow cross-origin requests. Please check your internet connection and try again.";
+      } else if (error.message.includes('CORS')) {
+        errorMessage += "Cross-origin request blocked. The Google Apps Script may need CORS configuration.";
+      } else {
+        errorMessage += error.message || "Please try again.";
+      }
+      
       toast({
-        title: "Error",
-        description: "Failed to verify OTP. Please check your internet connection and try again.",
+        title: "Connection Error",
+        description: errorMessage,
         variant: "destructive"
       });
     } finally {
