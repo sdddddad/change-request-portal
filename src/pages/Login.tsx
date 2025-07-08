@@ -28,91 +28,29 @@ const Login = () => {
 
     setIsLoading(true);
     
-    try {
-      console.log('Validating employee ID:', employeeId);
-      console.log('Making request to Google Apps Script...');
-      
-      const requestBody = { 
-        action: 'validateEmployee', 
-        employeeId: employeeId.trim() 
-      };
-      
-      console.log('Request body:', JSON.stringify(requestBody));
-      
-      const response = await fetch('https://script.google.com/macros/s/AKfycbyu4rPT1bVKlb-w-KgpJpyazamYK66qWalUp8yklZddwNgWMkdySBqGVgdxuYTnj3Ce/exec', {
-        method: 'POST',
-        mode: 'cors',
-        headers: { 
-          'Content-Type': 'application/json',
-          'Accept': 'application/json'
-        },
-        body: JSON.stringify(requestBody)
-      });
-
-      console.log('Response received:', response);
-      console.log('Response status:', response.status);
-      console.log('Response headers:', response.headers);
-      
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      
-      const responseText = await response.text();
-      console.log('Raw response text:', responseText);
-      
-      let result;
-      try {
-        result = JSON.parse(responseText);
-      } catch (parseError) {
-        console.error('Failed to parse JSON response:', parseError);
-        throw new Error('Invalid response format from server');
-      }
-      
-      console.log('Parsed validation result:', result);
-      
-      if (!result.success || !result.isValid) {
-        toast({
-          title: "Error",
-          description: result.message || "Invalid Employee ID. Please check and try again.",
-          variant: "destructive"
-        });
-        setIsLoading(false);
-        return;
-      }
-
-      // If validation successful, proceed to OTP step
+    // TODO: Add Google Sheets validation here
+    // Replace this section with Google Apps Script API call to validate employee ID
+    // const response = await fetch('YOUR_GOOGLE_APPS_SCRIPT_URL', {
+    //   method: 'POST',
+    //   headers: { 'Content-Type': 'application/json' },
+    //   body: JSON.stringify({ action: 'validateEmployee', employeeId: employeeId })
+    // });
+    // const result = await response.json();
+    // if (!result.isValid) {
+    //   toast({ title: "Error", description: "Invalid Employee ID", variant: "destructive" });
+    //   setIsLoading(false);
+    //   return;
+    // }
+    
+    // Simulate OTP sending (integrate with Google Apps Script)
+    setTimeout(() => {
+      setIsLoading(false);
       setStep(2);
       toast({
         title: "OTP Sent",
         description: "Please check your email for the verification code"
       });
-      
-    } catch (error) {
-      console.error('Error validating employee:', error);
-      console.error('Error details:', {
-        name: error.name,
-        message: error.message,
-        stack: error.stack
-      });
-      
-      let errorMessage = "Failed to validate Employee ID. ";
-      
-      if (error.message === 'Failed to fetch') {
-        errorMessage += "This might be a network issue or the Google Apps Script needs to be configured to allow cross-origin requests. Please check your internet connection and try again.";
-      } else if (error.message.includes('CORS')) {
-        errorMessage += "Cross-origin request blocked. The Google Apps Script may need CORS configuration.";
-      } else {
-        errorMessage += error.message || "Please try again.";
-      }
-      
-      toast({
-        title: "Connection Error",
-        description: errorMessage,
-        variant: "destructive"
-      });
-    } finally {
-      setIsLoading(false);
-    }
+    }, 1500);
   };
 
   const handleLogin = async (e: React.FormEvent) => {
@@ -128,101 +66,37 @@ const Login = () => {
 
     setIsLoading(true);
     
-    try {
-      console.log('Verifying OTP for employee:', employeeId, 'OTP:', otp);
-      
-      const requestBody = { 
-        action: 'verifyOTP', 
-        employeeId: employeeId.trim(),
-        otp: otp.trim()
-      };
-      
-      console.log('OTP verification request body:', JSON.stringify(requestBody));
-      
-      const response = await fetch('https://script.google.com/macros/s/AKfycbyu4rPT1bVKlb-w-KgpJpyazamYK66qWalUp8yklZddwNgWMkdySBqGVgdxuYTnj3Ce/exec', {
-        method: 'POST',
-        mode: 'cors',
-        headers: { 
-          'Content-Type': 'application/json',
-          'Accept': 'application/json'
-        },
-        body: JSON.stringify(requestBody)
-      });
-
-      console.log('OTP verification response status:', response.status);
-      
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      
-      const responseText = await response.text();
-      console.log('OTP verification raw response:', responseText);
-      
-      let result;
-      try {
-        result = JSON.parse(responseText);
-      } catch (parseError) {
-        console.error('Failed to parse OTP verification JSON response:', parseError);
-        throw new Error('Invalid response format from server');
-      }
-      
-      console.log('OTP verification result:', result);
-      
-      if (!result.success || !result.isValid) {
-        toast({
-          title: "Error",
-          description: result.message || "Invalid OTP. Please check and try again.",
-          variant: "destructive"
-        });
-        setIsLoading(false);
-        return;
-      }
-
-      // Store employee data from Google Sheets response
-      const employeeData = {
-        id: result.employeeData?.id || employeeId,
-        name: result.employeeData?.name || 'Employee',
-        role: result.employeeData?.role || 'User',
-        email: result.employeeData?.email || '',
-        loginTime: Date.now()
-      };
-
-      console.log('Storing employee data:', employeeData);
-      localStorage.setItem('employee', JSON.stringify(employeeData));
-      
-      toast({
-        title: "Success",
-        description: "Login successful! Redirecting to home page..."
-      });
-      
-      navigate('/home');
-      
-    } catch (error) {
-      console.error('Error verifying OTP:', error);
-      console.error('OTP verification error details:', {
-        name: error.name,
-        message: error.message,
-        stack: error.stack
-      });
-      
-      let errorMessage = "Failed to verify OTP. ";
-      
-      if (error.message === 'Failed to fetch') {
-        errorMessage += "This might be a network issue or the Google Apps Script needs to be configured to allow cross-origin requests. Please check your internet connection and try again.";
-      } else if (error.message.includes('CORS')) {
-        errorMessage += "Cross-origin request blocked. The Google Apps Script may need CORS configuration.";
-      } else {
-        errorMessage += error.message || "Please try again.";
-      }
-      
-      toast({
-        title: "Connection Error",
-        description: errorMessage,
-        variant: "destructive"
-      });
-    } finally {
+    // TODO: Add Google Sheets OTP verification here
+    // Replace this section with Google Apps Script API call to verify OTP and get employee details
+    // const response = await fetch('YOUR_GOOGLE_APPS_SCRIPT_URL', {
+    //   method: 'POST',
+    //   headers: { 'Content-Type': 'application/json' },
+    //   body: JSON.stringify({ action: 'verifyOTP', employeeId: employeeId, otp: otp })
+    // });
+    // const result = await response.json();
+    // if (!result.isValid) {
+    //   toast({ title: "Error", description: "Invalid OTP", variant: "destructive" });
+    //   setIsLoading(false);
+    //   return;
+    // }
+    // Store the actual employee data from Google Sheets:
+    // localStorage.setItem('employee', JSON.stringify({
+    //   ...result.employeeData,
+    //   loginTime: Date.now()
+    // }));
+    
+    // Simulate OTP verification (integrate with Google Apps Script)
+    setTimeout(() => {
       setIsLoading(false);
-    }
+      localStorage.setItem('employee', JSON.stringify({
+        id: employeeId,
+        name: 'John Doe', // This should come from Google Sheets
+        role: 'Manager', // This should come from Google Sheets
+        email: 'john.doe@company.com', // This should come from Google Sheets
+        loginTime: Date.now() // Add login timestamp
+      }));
+      navigate('/home');
+    }, 1500);
   };
 
   return (
@@ -275,7 +149,7 @@ const Login = () => {
                   {isLoading ? (
                     <div className="flex items-center space-x-2">
                       <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-                      <span>Validating...</span>
+                      <span>Sending OTP...</span>
                     </div>
                   ) : (
                     <div className="flex items-center space-x-2">
